@@ -64,7 +64,7 @@ const keys = [
 ---
 
 <Layout title="Binaural Beat Generator">
-  <main class="container mx-auto px-4 py-8">
+  <main class="container mx-auto px-4 py-8 dark:bg-gray-900 dark:text-white">
     <h1 class="text-3xl font-bold mb-6">Binaural Beat Generator</h1>
 
     <form id="binauralForm" class="max-w-md space-y-4">
@@ -78,7 +78,7 @@ const keys = [
           id="binauralFreq"
           name="binauralFreq"
           required
-          class="w-full rounded border p-2"
+          class="w-full rounded border p-2 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600"
         >
           {
             binauralBeats.map((beat) => (
@@ -88,7 +88,9 @@ const keys = [
             ))
           }
         </select>
-        <p class="text-xs text-gray-500">Recommended range: 0.5Hz - 40Hz</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          Recommended range: 0.5Hz - 40Hz
+        </p>
       </div>
 
       <div class="space-y-2">
@@ -102,15 +104,17 @@ const keys = [
           min="1"
           max="60"
           required
-          class="w-full rounded border p-2"
+          class="w-full rounded border p-2 dark:bg-gray-800 dark:border-gray-700"
           placeholder="15"
         />
-        <p class="text-xs text-gray-500">Maximum: 60 minutes</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          Maximum: 60 minutes
+        </p>
       </div>
 
       <button
         type="submit"
-        class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+        class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800"
       >
         Generate Binaural Beat
       </button>
@@ -124,21 +128,33 @@ const keys = [
       <!-- Binaural Beats Reference -->
       <div class="overflow-x-auto">
         <h2 class="text-xl font-semibold mb-4">Binaural Beats Effects</h2>
-        <table class="min-w-full border-collapse">
+        <table class="min-w-full border-collapse dark:border-gray-700">
           <thead>
-            <tr class="bg-gray-100">
-              <th class="border px-4 py-2 text-left">Type</th>
-              <th class="border px-4 py-2 text-left">Frequency</th>
-              <th class="border px-4 py-2 text-left">Effects</th>
+            <tr class="bg-gray-100 dark:bg-gray-800">
+              <th class="border px-4 py-2 text-left dark:border-gray-700"
+                >Type</th
+              >
+              <th class="border px-4 py-2 text-left dark:border-gray-700"
+                >Frequency</th
+              >
+              <th class="border px-4 py-2 text-left dark:border-gray-700"
+                >Effects</th
+              >
             </tr>
           </thead>
           <tbody>
             {
               binauralBeatsTable.map(({ type, frequency, description }) => (
-                <tr class="hover:bg-gray-50">
-                  <td class="border px-4 py-2 font-medium">{type}</td>
-                  <td class="border px-4 py-2">{frequency}</td>
-                  <td class="border px-4 py-2">{description}</td>
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td class="border px-4 py-2 font-medium dark:border-gray-700">
+                    {type}
+                  </td>
+                  <td class="border px-4 py-2 dark:border-gray-700">
+                    {frequency}
+                  </td>
+                  <td class="border px-4 py-2 dark:border-gray-700">
+                    {description}
+                  </td>
                 </tr>
               ))
             }
@@ -150,13 +166,15 @@ const keys = [
     <!-- Musical Notes in Keys Reference -->
     <div class="overflow-x-auto mt-8">
       <h2 class="text-xl font-semibold mb-4">Musical Notes in Keys</h2>
-      <table class="min-w-full border-collapse">
+      <table class="min-w-full border-collapse dark:border-gray-700">
         <thead>
-          <tr class="bg-gray-100">
-            <th class="border px-4 py-2 text-left">Key</th>
+          <tr class="bg-gray-100 dark:bg-gray-800">
+            <th class="border px-4 py-2 text-left dark:border-gray-700">Key</th>
             {
               Array.from({ length: 7 }, (_, i) => (
-                <th class="border px-4 py-2 text-left">{i + 1}</th>
+                <th class="border px-4 py-2 text-left dark:border-gray-700">
+                  {i + 1}
+                </th>
               ))
             }
           </tr>
@@ -164,10 +182,12 @@ const keys = [
         <tbody>
           {
             keys.map(({ name, notes }) => (
-              <tr class="hover:bg-gray-50">
-                <td class="border px-4 py-2 font-medium">{name}</td>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="border px-4 py-2 font-medium dark:border-gray-700">
+                  {name}
+                </td>
                 {notes.map((note) => (
-                  <td class="border px-4 py-2">{note}</td>
+                  <td class="border px-4 py-2 dark:border-gray-700">{note}</td>
                 ))}
               </tr>
             ))
@@ -177,7 +197,7 @@ const keys = [
     </div>
 
     <!-- Optional: Add a note about usage -->
-    <p class="text-sm text-gray-600 mt-8">
+    <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
       Tip: Select a base frequency that matches a note in the key of your song.
       For example, if your song is in C Major, you might choose C4 (261.63 Hz)
       as your base frequency. Pair it with a binaural beat frequency that aligns
@@ -196,5 +216,17 @@ const keys = [
       // The frequency will be handled by the React component
       // ... rest of the submit handler
     });
+
+    // Check for user's preference and set the theme accordingly
+    const userPrefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const rootElement = document.documentElement;
+
+    if (userPrefersDark) {
+      rootElement.classList.add("dark");
+    } else {
+      rootElement.classList.remove("dark");
+    }
   </script>
 </Layout>

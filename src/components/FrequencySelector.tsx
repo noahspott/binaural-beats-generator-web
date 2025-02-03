@@ -79,8 +79,8 @@ export function FrequencySelector() {
           ))}
         </select>
       </div>
-      <div className="col-span-2 text-center bg-gray-50 rounded p-2">
-        <span className="text-sm text-gray-600">Selected Frequency:</span>
+      <div className="col-span-2  rounded ">
+        <span className="text-sm text-gray-500">Selected Frequency:</span>
         <span className="ml-2 font-mono font-medium">{frequency.toFixed(2)} Hz</span>
       </div>
       <p className="text-xs text-gray-500 col-span-2">
