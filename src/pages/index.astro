@@ -1,11 +1,200 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { binauralBeats } from "../lib/frequencies";
+import { FrequencySelector } from "../components/FrequencySelector";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Musical notes data (A4 = 440Hz as reference)
+const musicalNotes = [
+  { note: "C4", frequency: 261.63 },
+  { note: "C#4/Db4", frequency: 277.18 },
+  { note: "D4", frequency: 293.66 },
+  { note: "D#4/Eb4", frequency: 311.13 },
+  { note: "E4", frequency: 329.63 },
+  { note: "F4", frequency: 349.23 },
+  { note: "F#4/Gb4", frequency: 369.99 },
+  { note: "G4", frequency: 392.0 },
+  { note: "G#4/Ab4", frequency: 415.3 },
+  { note: "A4", frequency: 440.0 },
+  { note: "A#4/Bb4", frequency: 466.16 },
+  { note: "B4", frequency: 493.88 },
+];
+
+const binauralBeatsTable = [
+  {
+    type: "Delta",
+    frequency: "0.5-4 Hz",
+    description: "Deep sleep, healing, pain relief",
+  },
+  {
+    type: "Theta",
+    frequency: "4-8 Hz",
+    description: "Meditation, creativity, REM sleep",
+  },
+  {
+    type: "Alpha",
+    frequency: "8-13 Hz",
+    description: "Relaxation, stress reduction, light meditation",
+  },
+  {
+    type: "Beta",
+    frequency: "13-30 Hz",
+    description: "Focus, alertness, problem solving",
+  },
+  {
+    type: "Gamma",
+    frequency: "30-100 Hz",
+    description: "Peak mental activity, high-level information processing",
+  },
+];
+
+const keys = [
+  { name: "C Major", notes: ["C", "D", "E", "F", "G", "A", "B"] },
+  { name: "G Major", notes: ["G", "A", "B", "C", "D", "E", "F#"] },
+  { name: "D Major", notes: ["D", "E", "F#", "G", "A", "B", "C#"] },
+  { name: "A Major", notes: ["A", "B", "C#", "D", "E", "F#", "G#"] },
+  { name: "E Major", notes: ["E", "F#", "G#", "A", "B", "C#", "D#"] },
+  { name: "B Major", notes: ["B", "C#", "D#", "E", "F#", "G#", "A#"] },
+  { name: "F# Major", notes: ["F#", "G#", "A#", "B", "C#", "D#", "E#"] },
+  { name: "C# Major", notes: ["C#", "D#", "E#", "F#", "G#", "A#", "B#"] },
+  { name: "F Major", notes: ["F", "G", "A", "Bb", "C", "D", "E"] },
+  { name: "Bb Major", notes: ["Bb", "C", "D", "Eb", "F", "G", "A"] },
+  { name: "Eb Major", notes: ["Eb", "F", "G", "Ab", "Bb", "C", "D"] },
+  { name: "Ab Major", notes: ["Ab", "Bb", "C", "Db", "Eb", "F", "G"] },
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Binaural Beat Generator">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Binaural Beat Generator</h1>
+
+    <form id="binauralForm" class="max-w-md space-y-4">
+      <FrequencySelector client:load />
+
+      <div class="space-y-2">
+        <label for="binauralFreq" class="block text-sm font-medium">
+          Binaural Beat Frequency (Hz)
+        </label>
+        <select
+          id="binauralFreq"
+          name="binauralFreq"
+          required
+          class="w-full rounded border p-2"
+        >
+          {
+            binauralBeats.map((beat) => (
+              <option value={beat.freq}>
+                {beat.name} ({beat.freq} Hz) - {beat.state}
+              </option>
+            ))
+          }
+        </select>
+        <p class="text-xs text-gray-500">Recommended range: 0.5Hz - 40Hz</p>
+      </div>
+
+      <div class="space-y-2">
+        <label for="duration" class="block text-sm font-medium">
+          Duration (minutes)
+        </label>
+        <input
+          type="number"
+          id="duration"
+          name="duration"
+          min="1"
+          max="60"
+          required
+          class="w-full rounded border p-2"
+          placeholder="15"
+        />
+        <p class="text-xs text-gray-500">Maximum: 60 minutes</p>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+      >
+        Generate Binaural Beat
+      </button>
+
+      <div id="status" class="hidden">
+        <!-- Status messages will go here -->
+      </div>
+    </form>
+
+    <div class="grid md:grid-cols-2 gap-8 mt-12">
+      <!-- Binaural Beats Reference -->
+      <div class="overflow-x-auto">
+        <h2 class="text-xl font-semibold mb-4">Binaural Beats Effects</h2>
+        <table class="min-w-full border-collapse">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border px-4 py-2 text-left">Type</th>
+              <th class="border px-4 py-2 text-left">Frequency</th>
+              <th class="border px-4 py-2 text-left">Effects</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              binauralBeatsTable.map(({ type, frequency, description }) => (
+                <tr class="hover:bg-gray-50">
+                  <td class="border px-4 py-2 font-medium">{type}</td>
+                  <td class="border px-4 py-2">{frequency}</td>
+                  <td class="border px-4 py-2">{description}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Musical Notes in Keys Reference -->
+    <div class="overflow-x-auto mt-8">
+      <h2 class="text-xl font-semibold mb-4">Musical Notes in Keys</h2>
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border px-4 py-2 text-left">Key</th>
+            {
+              Array.from({ length: 7 }, (_, i) => (
+                <th class="border px-4 py-2 text-left">{i + 1}</th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            keys.map(({ name, notes }) => (
+              <tr class="hover:bg-gray-50">
+                <td class="border px-4 py-2 font-medium">{name}</td>
+                {notes.map((note) => (
+                  <td class="border px-4 py-2">{note}</td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Optional: Add a note about usage -->
+    <p class="text-sm text-gray-600 mt-8">
+      Tip: Select a base frequency that matches a note in the key of your song.
+      For example, if your song is in C Major, you might choose C4 (261.63 Hz)
+      as your base frequency. Pair it with a binaural beat frequency that aligns
+      with your desired effect.
+    </p>
+  </main>
+
+  <script>
+    const form = document.getElementById("binauralForm");
+    const status = document.getElementById("status");
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target as HTMLFormElement);
+
+      // The frequency will be handled by the React component
+      // ... rest of the submit handler
+    });
+  </script>
 </Layout>
